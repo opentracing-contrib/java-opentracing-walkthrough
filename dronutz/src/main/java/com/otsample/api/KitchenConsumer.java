@@ -29,7 +29,12 @@ public class KitchenConsumer
 
     public KitchenConsumer()
     {
+        TracingInterceptor tracingInterceptor = new TracingInterceptor(
+                GlobalTracer.get(),
+                Arrays.asList(SpanDecorator.STANDARD_TAGS));
         client = new OkHttpClient.Builder()
+                .addInterceptor(tracingInterceptor)
+                .addNetworkInterceptor(tracingInterceptor)
                 .build();
 
         jsonType = MediaType.parse("application/json");
@@ -40,9 +45,11 @@ public class KitchenConsumer
         DonutAddRequest donutReq = new DonutAddRequest(orderId);
         RequestBody body = RequestBody.create(jsonType, Utils.toJSON(donutReq));
 
+        Span parentSpan = (Span) request.getAttribute("span");
         Request req = new Request.Builder()
             .url("http://127.0.0.1:10001/kitchen/add_donut")
             .post(body)
+            .tag(new TagWrapper(parentSpan.context()))
             .build();
 
 

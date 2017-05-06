@@ -24,6 +24,8 @@ public class KitchenContextHandler extends ServletContextHandler
 
     public KitchenContextHandler(Properties config)
     {
+        TracingFilter tracingFilter = new TracingFilter(GlobalTracer.get());
+        addFilter(new FilterHolder(tracingFilter), "/*", EnumSet.allOf(DispatcherType.class));
         setContextPath("/kitchen");
         registerServlets();
     }

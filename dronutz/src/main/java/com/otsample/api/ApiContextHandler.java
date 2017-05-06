@@ -56,6 +56,9 @@ public class ApiContextHandler extends ServletContextHandler
         public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
         {
+            Span orderSpan = GlobalTracer.get().buildSpan("order_span").start();
+            request.setAttribute("span", orderSpan);
+
             DonutRequest[] donutsInfo = parseDonutsInfo(request);
             if (donutsInfo == null) {
                 Utils.writeErrorResponse(response);
@@ -78,6 +81,7 @@ public class ApiContextHandler extends ServletContextHandler
             }
 
             Utils.writeJSON(response, statusRes);
+            orderSpan.finish();
         }
 
         static DonutRequest[] parseDonutsInfo(HttpServletRequest request)
