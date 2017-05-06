@@ -1,0 +1,165 @@
+html {
+  background-image: url(/img/donuts.png);
+  font-family: Impact, Charcoal, sans-serif;
+}
+h2{
+  margin: 0;
+  text-decoration: underline;
+}
+#title{
+  text-align: center;
+}
+.btn{
+  background: #ffffff;
+  border-radius: 12px;
+  border: 2px solid;
+  border-color: #aaf;
+}
+.btn:hover{
+  border-color: #faf;
+  cursor: pointer;
+}
+.btn:active{
+  border-color: #f89;
+}
+.box{
+  display:inline-block;
+  text-transform: capitalize;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 2px solid;
+  border-color: #aaf;
+  padding: 0.5em 1em;
+}
+#shopping-cart{
+  display:none;
+}
+#order-status{
+  display: none;
+}
+#order-loading{
+  display: none;
+}
+#order-btn{
+  display: inline-block;
+  padding: 2px 6px;
+  margin-top: 6px;
+  float: right;
+}
+
+/* All the nonsense below is for the loading graphic */
+.bubblingG {
+	text-align: center;
+	width:78px;
+	height:49px;
+	margin: auto;
+}
+.bubblingG span {
+	display: inline-block;
+	vertical-align: middle;
+	width: 10px;
+	height: 10px;
+	margin: 24px auto;
+	background: rgb(0,0,0);
+	border-radius: 49px;
+		-o-border-radius: 49px;
+		-ms-border-radius: 49px;
+		-webkit-border-radius: 49px;
+		-moz-border-radius: 49px;
+	animation: bubblingG 1.5s infinite alternate;
+		-o-animation: bubblingG 1.5s infinite alternate;
+		-ms-animation: bubblingG 1.5s infinite alternate;
+		-webkit-animation: bubblingG 1.5s infinite alternate;
+		-moz-animation: bubblingG 1.5s infinite alternate;
+}
+#bubblingG_1 {
+	animation-delay: 0s;
+		-o-animation-delay: 0s;
+		-ms-animation-delay: 0s;
+		-webkit-animation-delay: 0s;
+		-moz-animation-delay: 0s;
+}
+#bubblingG_2 {
+	animation-delay: 0.45s;
+		-o-animation-delay: 0.45s;
+		-ms-animation-delay: 0.45s;
+		-webkit-animation-delay: 0.45s;
+		-moz-animation-delay: 0.45s;
+}
+#bubblingG_3 {
+	animation-delay: 0.9s;
+		-o-animation-delay: 0.9s;
+		-ms-animation-delay: 0.9s;
+		-webkit-animation-delay: 0.9s;
+		-moz-animation-delay: 0.9s;
+}
+@keyframes bubblingG {
+	0% {
+		width: 10px;
+		height: 10px;
+		background-color:rgb(0,0,0);
+		transform: translateY(0);
+	}
+	100% {
+		width: 23px;
+		height: 23px;
+		background-color:rgb(255,255,255);
+		transform: translateY(-20px);
+	}
+}
+@-o-keyframes bubblingG {
+	0% {
+		width: 10px;
+		height: 10px;
+		background-color:rgb(0,0,0);
+		-o-transform: translateY(0);
+	}
+	100% {
+		width: 23px;
+		height: 23px;
+		background-color:rgb(255,255,255);
+		-o-transform: translateY(-20px);
+	}
+}
+@-ms-keyframes bubblingG {
+	0% {
+		width: 10px;
+		height: 10px;
+		background-color:rgb(0,0,0);
+		-ms-transform: translateY(0);
+	}
+	100% {
+		width: 23px;
+		height: 23px;
+		background-color:rgb(255,255,255);
+		-ms-transform: translateY(-20px);
+	}
+}
+@-webkit-keyframes bubblingG {
+	0% {
+		width: 10px;
+		height: 10px;
+		background-color:rgb(0,0,0);
+		-webkit-transform: translateY(0);
+	}
+	100% {
+		width: 23px;
+		height: 23px;
+		background-color:rgb(255,255,255);
+		-webkit-transform: translateY(-20px);
+	}
+}
+@-moz-keyframes bubblingG {
+	0% {
+		width: 10px;
+		height: 10px;
+		background-color:rgb(0,0,0);
+		-moz-transform: translateY(0);
+	}
+	100% {
+		width: 23px;
+		height: 23px;
+		background-color:rgb(255,255,255);
+		-moz-transform: translateY(-20px);
+	}
+}

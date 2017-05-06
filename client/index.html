@@ -1,0 +1,57 @@
+<html lang="en-US">
+  <head>
+    <meta charset="ISO-8859-1">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dronutz</title>
+    <link rel="shortcut icon" href="/img/donut-sprinkles.png">
+    <script src="/js/jquery-3.2.0.min.js"></script>
+    <script src="/js/opentracing-browser.js"></script>
+    <script src="/js/lightstep-tracer.js"></script>
+    <script src="/config.js" type="text/javascript"></script>
+    <script src="/client.js"></script>
+    <script src="/order.js"></script>
+    <link rel="stylesheet" href="/css/styles.css"/>
+  </head>
+  <body>
+    <h1 id="title"> Dronutz </h1>
+    <h2>Menu</h2>
+    <div id="menu">
+      <img class="donut-btn btn"
+         src="/img/donut-glazed.png"
+         data-flavor="glazed">
+      <img class="donut-btn btn"
+         src="/img/donut-cinn.jpg"
+         data-flavor="cinnamon">
+      <img class="donut-btn btn"
+         src="/img/donut-old-fash.jpg"
+         data-flavor="old-fashioned">
+      <img class="donut-btn btn"
+         src="/img/donut-choc.jpg"
+         data-flavor="chocolate">
+      <img class="donut-btn btn"
+         src="/img/donut-sprinkles.png"
+         data-flavor="sprinkles">
+      <img class="donut-btn btn"
+         src="/img/donut-jelly.jpg"
+         data-flavor="jelly">
+    </div> 
+    <div id="shopping-cart" class="box">
+      <h2>Cart</h2>
+      <div id="shopping-cart-items"></div>
+      <div id="order-btn" class="btn">Order</div>
+    </div>
+    <div id="order-status" class="box">
+      <h2>Order Status</h2>
+      <div id="wait-time"></div>
+      <div id="status-update"></div>
+    </div>
+    <div id="order-loading" class="box">
+      <h2>Order Status</h2>
+      <div class="bubblingG">
+      	<span id="bubblingG_1"></span>
+      	<span id="bubblingG_2"></span>
+      	<span id="bubblingG_3"></span>
+      </div>
+    </div>
+  </body>
+</html>
