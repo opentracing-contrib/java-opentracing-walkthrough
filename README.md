@@ -50,6 +50,8 @@ To run Jaeger locally (via Docker):
 $ docker run -d -p 5775:5775/udp -p 16686:16686 jaegertracing/all-in-one:latest
 ```
 
+Then add the following to `microdonuts/tracer_config.properties`:
+
 ```properties
 tracer=jaeger
 jaeger.reporter_host=localhost
@@ -64,6 +66,8 @@ To run Zipkin locally (via Docker):
 $ docker run -d -p 9411:9411 openzipkin/zipkin
 ```
 
+Then add the following to `microdonuts/tracer_config.properties`:
+
 ```properties
 tracer=zipkin
 zipkin.reporter_host=localhost
@@ -72,7 +76,8 @@ zipkin.reporter_port=9411
 
 #### LightStep
 
-If you have access to LightStep, you will need your access token.
+If you have access to LightStep, you will need your access token. Add the following to `microdonuts/tracer_config.properties`:
+
 
 ```properties
 tracer=lightstep
@@ -81,13 +86,26 @@ lightstep.collector_port=443
 lightstep.access_token=XXXXXXXXXXXXXXX  // TODO: replace with your token
 ```
 
-## Step 1: TurnKey Tracing
+## Step 0: Check out the `no-tracing` branch
 
-When you go to add tracing to a system, the best place to start is installing
-OpenTracing plugins for the OSS components you are using. Instrumenting your
-networking libraries, web frameworks, and service clients quickly gives you a
-lot of information about your distributed system, without requiring you to
-change a lot of code.
+The `master` branch in this repository has tracing instrumentation added as
+described below. To maximize your learnings, do a ...
+
+```bash
+git checkout no-tracing
+```
+
+... to start with a version of the code that's not instrumented yet. The guide
+below will let you learn-by-doing as you re-introduce that tracing
+instrumentation.
+
+## Step 1: Turnkey Tracing
+
+When you go to add tracing to a system, the best place to start is by
+installing OpenTracing plugins for the OSS components you are using.
+Instrumenting your networking libraries, web frameworks, and service clients
+quickly gives you a lot of information about your distributed system, without
+requiring you to change a lot of code.
 
 To do this, let's change the startup of the application to include tracing.
 
@@ -96,7 +114,7 @@ In OpenTracing, there is a concept of a global tracer for everyone to access,
 As a convenience, we already have a function `configureGlobalTracer` that
 works with the MicroDonuts configuration file. In the `main` of 
 `microdonuts/src/main/java/com/otsample/api/App.java`, right after the configuration
-file was loaded, do:
+file was loaded, we add:
 
 ```java
         Properties config = loadConfig(args);
@@ -104,8 +122,7 @@ file was loaded, do:
             throw new Exception("Could not configure the global tracer");
 ```
 
-After this, the tracer will be available globally through
-`io.opentracing.GlobalTracer.get()`.
+After this, the tracer will be available globally through `io.opentracing.GlobalTracer.get()`.
 
 ### Instrument the outgoing HTTP requests
 
@@ -136,12 +153,12 @@ inside the constructor do:
     addFilter(new FilterHolder(tracingFilter), "/*", EnumSet.allOf(DispatcherType.class));
 ```
 
-After this, the incoming requests to `kitchen` will be traced too.
+After this, the incoming requests to `kitchen` will be traced, too.
 
 ### Check it out in your Tracer
 
-Now that we're all hooked up, try buying some donuts in the browser. You should
-see the traces appear in your tracer.
+Now that we're all hooked up, try ordering some donuts in the browser. You
+should see the traces appear in your tracer.
 
 Search for traces starting belonging to the `MicroDonuts` component to see the
 patterns of requests that occur when you click the order button.
@@ -221,7 +238,7 @@ plase consider adding built-in OT support.
 We also need walkthroughs for languages other than Golang. Feel free to reuse
 the client, protobufs, and other assets from here if you'd like to make one.
 
-For a more detailed explanation of OSS Instrumentation, check out the TurnKey
+For a more detailed explanation of OSS Instrumentation, check out the Turnkey
 Tracing proposal at http://bit.ly/turnkey-tracing.
 
 _Aloha!_
