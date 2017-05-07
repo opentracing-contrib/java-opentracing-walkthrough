@@ -7,12 +7,12 @@ OpenTracing is a vendor-neutral, open standard for distributed tracing. To
 learn more, check out [opentracing.io](http://opentracing.io), and try the
 walkthrough below!
 
-In addition to doing the walkthrough yourself, the results of each step are
-saved in their own git branch.
-- `git checkout step-1` to see MicroDonuts with turnkey/network tracing.
-- `git checkout step-2` to see an example of application-level client tracing.
+**Note that there are two git branches of note here.**
+- `git checkout master` illustrates a trivial multi-service app with cross-service tracing via OpenTracing
+- `git checkout no-tracing` removes the tracing instrumentation, allowing the reader to add it in themselves
 
 ## Step 0: Setup MicroDonuts
+
 ### Getting it
 Clone this repository and build the jar file (for this, Maven must be
 installed):
@@ -24,17 +24,18 @@ mvn package
 ```
 
 ### Running
+
 MicroDonuts has two server components, `API` and `Kitchen`, which
 communicate each other over HTTP - they are, however, part of
 the same process:
 
 ```
 cd java-opentracing-walkthrough/microdonuts
-mvn exec:exec
+mvn package exec:exec
 ```
 
-In your web broswer, navigate to http://127.0.0.1:10001 and get yourself
-some donuts.
+In your web broswer, navigate to http://127.0.0.1:10001 and order yourself some
+µ-donuts.
 
 ### Pick a Tracer
 
@@ -58,6 +59,8 @@ jaeger.reporter_host=localhost
 jaeger.reporter_port=5775
 ```
 
+Note that the all-in-one docker image presents the Jaeger UI at [localhost:16686](http://localhost:16686/).
+
 #### Zipkin
 
 To run Zipkin locally (via Docker):
@@ -74,10 +77,11 @@ zipkin.reporter_host=localhost
 zipkin.reporter_port=9411
 ```
 
+Note that the all-in-one docker image presents the Zipkin UI at [localhost:9411](http://localhost:9411/).
+
 #### LightStep
 
-If you have access to LightStep, you will need your access token. Add the following to `microdonuts/tracer_config.properties`:
-
+If you have access to [LightStep](https://app.lightstep.com]), you will need your access token. Add the following to `microdonuts/tracer_config.properties`:
 
 ```properties
 tracer=lightstep
