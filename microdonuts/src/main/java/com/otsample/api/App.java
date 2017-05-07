@@ -57,7 +57,7 @@ public class App
     static Properties loadConfig(String [] args)
         throws IOException
     {
-        String file = "config_example.properties";
+        String file = "tracer_config.properties";
         if (args.length > 0)
             file = args[0];
 
@@ -83,15 +83,6 @@ public class App
                         1000,   // flush interval in milliseconds
                         10000)  // max buffered Spans
                 ).getTracer());
-        } else if ("lightstep".equals(tracerName)) {
-            Options opts = new Options.OptionsBuilder()
-                .withAccessToken(config.getProperty("lightstep.access_token"))
-                .withCollectorHost(config.getProperty("lightstep.collector_host"))
-                .withCollectorPort(Integer.decode(config.getProperty("lightstep.collector_port")))
-                .withComponentName(componentName)
-                .build();
-            Tracer tracer = new JRETracer(opts);
-            GlobalTracer.register(tracer);
         } else if ("zipkin".equals(tracerName)){
             Sender sender = OkHttpSender.create(
                 "http://" +
@@ -102,6 +93,15 @@ public class App
                 .localServiceName(componentName)
                 .reporter(reporter)
                 .build()));
+        } else if ("lightstep".equals(tracerName)) {
+            Options opts = new Options.OptionsBuilder()
+                .withAccessToken(config.getProperty("lightstep.access_token"))
+                .withCollectorHost(config.getProperty("lightstep.collector_host"))
+                .withCollectorPort(Integer.decode(config.getProperty("lightstep.collector_port")))
+                .withComponentName(componentName)
+                .build();
+            Tracer tracer = new JRETracer(opts);
+            GlobalTracer.register(tracer);
         } else {
             return false;
         }
