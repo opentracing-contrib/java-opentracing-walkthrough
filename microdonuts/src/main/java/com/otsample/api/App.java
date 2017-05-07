@@ -105,7 +105,6 @@ public class App
         } else {
             return false;
         }
-        GlobalTracer.get().buildSpan("testing").start().setTag("blah", "foo").finish();
 
         return true;
     }
