@@ -17,9 +17,6 @@ import com.google.gson.JsonObject;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
-import io.opentracing.Span;
-import io.opentracing.util.GlobalTracer;
-
 import com.otsample.api.resources.*;
 
 public class ApiContextHandler extends ServletContextHandler
@@ -54,32 +51,28 @@ public class ApiContextHandler extends ServletContextHandler
         public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
         {
-            try (Span orderSpan = GlobalTracer.get().buildSpan("order_span").start()) {
-                request.setAttribute("span", orderSpan);
-
-                DonutRequest[] donutsInfo = parseDonutsInfo(request);
-                if (donutsInfo == null) {
-                    Utils.writeErrorResponse(response);
-                    return;
-                }
-
-                String orderId = UUID.randomUUID().toString();
-
-                for (DonutRequest donutReq : donutsInfo)
-                    for (int i = 0; i < donutReq.getQuantity(); i++)
-                        if (!kitchenConsumer.addDonut(request, orderId)) {
-                            Utils.writeErrorResponse(response);
-                            return;
-                        }
-
-                StatusRes statusRes = kitchenConsumer.checkStatus(request, orderId);
-                if (statusRes == null) {
-                    Utils.writeErrorResponse(response);
-                    return;
-                }
-
-                Utils.writeJSON(response, statusRes);
+            DonutRequest[] donutsInfo = parseDonutsInfo(request);
+            if (donutsInfo == null) {
+                Utils.writeErrorResponse(response);
+                return;
             }
+
+            String orderId = UUID.randomUUID().toString();
+
+            for (DonutRequest donutReq : donutsInfo)
+                for (int i = 0; i < donutReq.getQuantity(); i++)
+                    if (!kitchenConsumer.addDonut(request, orderId)) {
+                        Utils.writeErrorResponse(response);
+                        return;
+                    }
+
+            StatusRes statusRes = kitchenConsumer.checkStatus(request, orderId);
+            if (statusRes == null) {
+                Utils.writeErrorResponse(response);
+                return;
+            }
+
+            Utils.writeJSON(response, statusRes);
         }
 
         static DonutRequest[] parseDonutsInfo(HttpServletRequest request)

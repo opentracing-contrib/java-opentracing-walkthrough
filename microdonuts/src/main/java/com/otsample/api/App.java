@@ -28,8 +28,6 @@ public class App
         throws Exception
     {
         Properties config = loadConfig(args);
-        if (!configureGlobalTracer(config, "MicroDonuts"))
-            throw new Exception("Could not configure the global tracer");
 
         ResourceHandler filesHandler = new ResourceHandler();
         filesHandler.setWelcomeFiles(new String[]{ "./index.html" });

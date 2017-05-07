@@ -14,12 +14,6 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import io.opentracing.Span;
-import io.opentracing.contrib.okhttp3.TagWrapper;
-import io.opentracing.contrib.okhttp3.TracingInterceptor;
-import io.opentracing.contrib.okhttp3.SpanDecorator;
-import io.opentracing.util.GlobalTracer;
-
 import com.otsample.api.resources.*;
 
 public class KitchenConsumer
@@ -29,14 +23,7 @@ public class KitchenConsumer
 
     public KitchenConsumer()
     {
-        TracingInterceptor tracingInterceptor = new TracingInterceptor(
-                GlobalTracer.get(),
-                Arrays.asList(SpanDecorator.STANDARD_TAGS));
-        client = new OkHttpClient.Builder()
-                .addInterceptor(tracingInterceptor)
-                .addNetworkInterceptor(tracingInterceptor)
-                .build();
-
+        client = new OkHttpClient.Builder().build();
         jsonType = MediaType.parse("application/json");
     }
 
@@ -45,11 +32,9 @@ public class KitchenConsumer
         DonutAddRequest donutReq = new DonutAddRequest(orderId);
         RequestBody body = RequestBody.create(jsonType, Utils.toJSON(donutReq));
 
-        Span parentSpan = (Span) request.getAttribute("span");
         Request req = new Request.Builder()
             .url("http://127.0.0.1:10001/kitchen/add_donut")
             .post(body)
-            .tag(new TagWrapper(parentSpan.context()))
             .build();
 
 
