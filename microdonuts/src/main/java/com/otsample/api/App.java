@@ -9,7 +9,6 @@ import java.util.*;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Handler;
-import org.eclipse.jetty.server.handler.ErrorHandler;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
@@ -18,7 +17,6 @@ import io.opentracing.Tracer;
 import io.opentracing.util.GlobalTracer;
 import com.lightstep.tracer.jre.JRETracer;
 import com.lightstep.tracer.shared.Options;
-import zipkin.Span;
 import zipkin.reporter.AsyncReporter;
 import zipkin.reporter.Reporter;
 import zipkin.reporter.Sender;

@@ -1,7 +1,6 @@
 package com.otsample.api;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,8 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.*;
 import org.apache.commons.io.IOUtils;
-
-import com.otsample.api.resources.*;
 
 public final class Utils
 {
