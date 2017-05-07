@@ -56,32 +56,32 @@ public class ApiContextHandler extends ServletContextHandler
         public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
         {
-            Span orderSpan = GlobalTracer.get().buildSpan("order_span").start();
-            request.setAttribute("span", orderSpan);
+            try (Span orderSpan = GlobalTracer.get().buildSpan("order_span").start()) {
+                request.setAttribute("span", orderSpan);
 
-            DonutRequest[] donutsInfo = parseDonutsInfo(request);
-            if (donutsInfo == null) {
-                Utils.writeErrorResponse(response);
-                return;
+                DonutRequest[] donutsInfo = parseDonutsInfo(request);
+                if (donutsInfo == null) {
+                    Utils.writeErrorResponse(response);
+                    return;
+                }
+
+                String orderId = UUID.randomUUID().toString();
+
+                for (DonutRequest donutReq : donutsInfo)
+                    for (int i = 0; i < donutReq.getQuantity(); i++)
+                        if (!kitchenConsumer.addDonut(request, orderId)) {
+                            Utils.writeErrorResponse(response);
+                            return;
+                        }
+
+                StatusRes statusRes = kitchenConsumer.checkStatus(request, orderId);
+                if (statusRes == null) {
+                    Utils.writeErrorResponse(response);
+                    return;
+                }
+
+                Utils.writeJSON(response, statusRes);
             }
-
-            String orderId = UUID.randomUUID().toString();
-
-            for (DonutRequest donutReq: donutsInfo)
-                for (int i = 0; i < donutReq.getQuantity(); i++)
-                    if (!kitchenConsumer.addDonut(request, orderId)) {
-                        Utils.writeErrorResponse(response);
-                        return;
-                    }
-
-            StatusRes statusRes = kitchenConsumer.checkStatus(request, orderId);
-            if (statusRes == null) {
-                Utils.writeErrorResponse(response);
-                return;
-            }
-
-            Utils.writeJSON(response, statusRes);
-            orderSpan.finish();
         }
 
         static DonutRequest[] parseDonutsInfo(HttpServletRequest request)
