@@ -29,7 +29,8 @@ communicate each other over HTTP - they are, however, part of
 the same process:
 
 ```
-./scripts/run_kitchen.sh config_example.properties
+cd java-opentracing-walkthrough/microdonuts
+mvn exec:exec
 ```
 
 In your web broswer, navigate to http://127.0.0.1:10001 and get yourself

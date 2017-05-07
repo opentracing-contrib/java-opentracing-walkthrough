@@ -90,6 +90,12 @@
   <version>3.7.0</version>
 </dependency>
 
+<dependency>
+    <groupId>org.codehaus.mojo</groupId>
+    <artifactId>exec-maven-plugin</artifactId>
+    <version>1.6.0</version>
+</dependency>
+
 </dependencies>
 
   <build>
@@ -112,6 +118,28 @@
             </configuration>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.6.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <executable>java</executable>
+          <arguments>
+            <argument>-cp</argument>
+            <argument>target/api-1.0-SNAPSHOT.jar</argument>
+            <argument>-Dorg.eclipse.jetty.util.log.classrg.eclipse.jetty.util.log.StdErrLog</argument>
+            <argument>com.otsample.api.App</argument>
+            <argument>../tracer_config.properties</argument>
+          </arguments>
+        </configuration>
       </plugin>
     </plugins>
   </build>

@@ -1,0 +1,7 @@
+CASING NOTE FOR OUR RESOURCES CLASSES
+=====================================
+
+We use the Google's gson library for json handling,
+which by default serialized classes fields based
+on their actual name - so we decided to keep them
+json-friendly, instead of going camel-case.
