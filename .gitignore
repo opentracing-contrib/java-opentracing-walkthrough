@@ -7,8 +7,10 @@
 *.zip
 *.tar.gz
 *.rar
+*.iml
 
 target/
+.idea
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup

@@ -52,11 +52,6 @@ function pollStatus(order){
 
         order.complete();
         render(order);
-
-        // prevent alert from blocking repaint
-        setTimeout(function(){
-          alert("Dronut delivery confirmed!");
-        },0);
       },
     });
   },1000);

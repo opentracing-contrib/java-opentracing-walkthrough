@@ -64,15 +64,31 @@ public class App
         throws MalformedURLException
     {
         String tracerName = config.getProperty("tracer");
-        if (!"lightstep".equals(tracerName))
+        if ("jaeger".equals(tracerName)) {
+            GlobalTracer.register(
+                new com.uber.jaeger.Configuration(
+                    componentName,
+                    new com.uber.jaeger.Configuration.SamplerConfiguration("const", 1),
+                    new com.uber.jaeger.Configuration.ReporterConfiguration(
+                        true,  // logSpans
+                        config.getProperty("jaeger.reporter_host"),
+                        Integer.decode(config.getProperty("jaeger.reporter_port")),
+                        1000,   // flush interval in milliseconds
+                        10000)  // max buffered Spans
+                ).getTracer());
+        } else if ("lightstep".equals(tracerName)) {
+            Options opts = new Options.OptionsBuilder()
+                .withAccessToken(config.getProperty("lightstep.access_token"))
+                .withCollectorHost(config.getProperty("lightstep.collector_host"))
+                .withCollectorPort(Integer.decode(config.getProperty("lightstep.collector_port")))
+                .withComponentName(componentName)
+                .build();
+            Tracer tracer = new JRETracer(opts);
+            GlobalTracer.register(tracer);
+        } else {
             return false;
-
-        Options opts = new Options.OptionsBuilder()
-            .withAccessToken(config.getProperty("tracer_access_token"))
-            .withComponentName(componentName)
-            .build();
-        Tracer tracer = new JRETracer(opts);
-        GlobalTracer.register(tracer);
+        }
+        GlobalTracer.get().buildSpan("testing").start().setTag("blah", "foo").finish();
 
         return true;
     }
