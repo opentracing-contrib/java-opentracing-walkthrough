@@ -70,19 +70,19 @@ public class KitchenService
 
                 Donut donutReq = (Donut) donut;
                 switch (donutReq.getStatus()) {
-                    case new_order:
-                        donutReq.setStatus(Status.received);
+                    case NEW_ORDER:
+                        donutReq.setStatus(Status.RECEIVED);
                         allDonuts.add(donutReq);
                         fryer.add(donutReq);
                         break;
-                    case received:
+                    case RECEIVED:
                         Thread.sleep(400);
-                        donutReq.setStatus(Status.cooking);
+                        donutReq.setStatus(Status.COOKING);
                         fryer.add(donutReq);
                         break;
-                    case cooking:
+                    case COOKING:
                         Thread.sleep(1000);
-                        donutReq.setStatus(Status.ready);
+                        donutReq.setStatus(Status.READY);
                         break;
                 }
             }

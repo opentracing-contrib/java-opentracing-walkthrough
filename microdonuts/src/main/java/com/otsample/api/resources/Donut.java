@@ -1,7 +1,10 @@
 package com.otsample.api.resources;
 
+import com.google.gson.annotations.SerializedName;
+
 public final class Donut
 {
+    @SerializedName("order_id")
     String orderId;
     Status status;
 
@@ -12,7 +15,7 @@ public final class Donut
     public Donut(String orderId)
     {
         this.orderId = orderId;
-        status = Status.new_order;
+        status = Status.NEW_ORDER;
     }
 
     public Donut clone()

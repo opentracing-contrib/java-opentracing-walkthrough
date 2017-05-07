@@ -1,27 +1,32 @@
 package com.otsample.api.resources;
 
+import com.google.gson.annotations.SerializedName;
+
 public final class StatusRes
 {
-    String order_id;
-    int estimated_delivery_time;
+    @SerializedName("order_id")
+    String orderId;
+    @SerializedName("estimated_delivery_time")
+    int estimatedDeliveryTime;
+    @SerializedName("state")
     Status state;
 
     public StatusRes()
     {
     }
 
-    public StatusRes(String order_id, int estimated_delivery_time, Status state)
+    public StatusRes(String orderId, int estimatedDeliveryTime, Status state)
     {
-        this.order_id = order_id;
-        this.estimated_delivery_time = estimated_delivery_time;
+        this.orderId = orderId;
+        this.estimatedDeliveryTime = estimatedDeliveryTime;
         this.state = state;
     }
 
-    public String getOrderId() { return order_id; }
-    public void setOrderId(String value) { order_id = value; }
+    public String getOrderId() { return orderId; }
+    public void setOrderId(String value) { orderId = value; }
 
-    public int getEstimatedDeliveryTime() { return estimated_delivery_time; }
-    public void setEstimatedDeliveryTime(int value) { estimated_delivery_time = value; }
+    public int getEstimatedDeliveryTime() { return estimatedDeliveryTime; }
+    public void setEstimatedDeliveryTime(int value) { estimatedDeliveryTime = value; }
 
     public Status getStatus() { return state; }
     public void setStatus(Status value) { state = value; }

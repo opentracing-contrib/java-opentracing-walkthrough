@@ -98,22 +98,22 @@ public class KitchenConsumer
             if (donut.getOrderId().equals(orderId))
                 filtered.add(donut);
 
-        Status status = Status.ready;
+        Status status = Status.READY;
         int estimatedTime = 0;
 
         for (Donut donut: filtered) {
             switch (donut.getStatus()) {
-                case new_order:
+                case NEW_ORDER:
                     estimatedTime += 3;
-                    status = Status.new_order;
+                    status = Status.NEW_ORDER;
                     break;
-                case received:
+                case RECEIVED:
                     estimatedTime += 2;
-                    status = Status.received;
+                    status = Status.RECEIVED;
                     break;
-                case cooking:
+                case COOKING:
                     estimatedTime += 1;
-                    status = Status.cooking;
+                    status = Status.COOKING;
                     break;
             }
         }

@@ -1,10 +1,16 @@
 package com.otsample.api.resources;
 
+import com.google.gson.annotations.SerializedName;
+
 public enum Status
 {
-    new_order,
-    received,
-    cooking,
-    ready
+    @SerializedName("order")
+    NEW_ORDER,
+    @SerializedName("received")
+    RECEIVED,
+    @SerializedName("cooking")
+    COOKING,
+    @SerializedName("ready")
+    READY
 }
 

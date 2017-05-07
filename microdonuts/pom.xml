@@ -137,7 +137,7 @@
             <argument>target/api-1.0-SNAPSHOT.jar</argument>
             <argument>-Dorg.eclipse.jetty.util.log.classrg.eclipse.jetty.util.log.StdErrLog</argument>
             <argument>com.otsample.api.App</argument>
-            <argument>../tracer_config.properties</argument>
+            <argument>./tracer_config.properties</argument>
           </arguments>
         </configuration>
       </plugin>
