@@ -1,5 +1,7 @@
 package com.otsample.api;
 
+import brave.Tracing;
+import brave.opentracing.BraveTracer;
 import java.io.IOException;
 import java.io.FileInputStream;
 import java.net.MalformedURLException;
@@ -16,6 +18,11 @@ import io.opentracing.Tracer;
 import io.opentracing.util.GlobalTracer;
 import com.lightstep.tracer.jre.JRETracer;
 import com.lightstep.tracer.shared.Options;
+import zipkin.Span;
+import zipkin.reporter.AsyncReporter;
+import zipkin.reporter.Reporter;
+import zipkin.reporter.Sender;
+import zipkin.reporter.okhttp3.OkHttpSender;
 
 public class App
 {
@@ -85,6 +92,16 @@ public class App
                 .build();
             Tracer tracer = new JRETracer(opts);
             GlobalTracer.register(tracer);
+        } else if ("zipkin".equals(tracerName)){
+            Sender sender = OkHttpSender.create(
+                "http://" +
+                    config.getProperty("zipkin.reporter_host") + ":" +
+                    config.getProperty("zipkin.reporter_port") + "/api/v1/spans");
+            Reporter reporter = AsyncReporter.builder(sender).build();
+            GlobalTracer.register(BraveTracer.create(Tracing.newBuilder()
+                .localServiceName(componentName)
+                .reporter(reporter)
+                .build()));
         } else {
             return false;
         }
