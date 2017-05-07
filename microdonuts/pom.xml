@@ -10,91 +10,80 @@
 
 <dependencies>
 
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-
-<dependency>
+  <dependency>
+    <groupId>junit</groupId>
+    <artifactId>junit</artifactId>
+    <version>3.8.1</version>
+    <scope>test</scope>
+  </dependency>
+  <dependency>
     <groupId>org.eclipse.jetty</groupId>
     <artifactId>jetty-server</artifactId>
     <version>9.4.5.v20170502</version>
-</dependency>
-<dependency>
+  </dependency>
+  <dependency>
     <groupId>org.eclipse.jetty</groupId>
     <artifactId>jetty-servlet</artifactId>
     <version>9.4.5.v20170502</version>
-</dependency>
-
-<dependency>
+  </dependency>
+  <dependency>
     <groupId>io.opentracing.contrib</groupId>
     <artifactId>opentracing-web-servlet-filter</artifactId>
     <version>0.0.6</version>
-</dependency>
-
-<dependency>
-  <groupId>com.lightstep.tracer</groupId>
-  <artifactId>lightstep-tracer-jre</artifactId>
-  <version>0.11.0</version>
-</dependency>
-<dependency>
-  <groupId>com.uber.jaeger</groupId>
-  <artifactId>jaeger-core</artifactId>
-  <version>0.18.0</version>
-</dependency>
-<dependency>
-  <groupId>io.opentracing.brave</groupId>
-  <artifactId>brave-opentracing</artifactId>
-  <version>0.20.0</version>
-</dependency>
-<dependency>
-  <groupId>io.zipkin.reporter</groupId>
-  <artifactId>zipkin-reporter</artifactId>
-  <version>0.7.1</version>
-</dependency>
-<dependency>
-  <groupId>io.zipkin.reporter</groupId>
-  <artifactId>zipkin-sender-okhttp3</artifactId>
-  <version>0.7.1</version>
-</dependency>
-
-<dependency>
+  </dependency>
+  <dependency>
     <groupId>io.opentracing.contrib</groupId>
     <artifactId>opentracing-okhttp3</artifactId>
     <version>0.0.4</version>
-</dependency>
-
-<dependency>
-    <groupId>io.opentracing.brave</groupId>
-    <artifactId>brave-opentracing</artifactId>
-    <version>0.20.0</version>
-</dependency>
-
-<dependency>
+  </dependency>
+  <dependency>
     <groupId>com.google.code.gson</groupId>
     <artifactId>gson</artifactId>
     <version>2.8.0</version>
-</dependency>
-
-<dependency>
+  </dependency>
+  <dependency>
     <groupId>commons-io</groupId>
     <artifactId>commons-io</artifactId>
     <version>2.5</version>
-</dependency>
-
-<dependency>
-  <groupId>com.squareup.okhttp3</groupId>
-  <artifactId>okhttp</artifactId>
-  <version>3.7.0</version>
-</dependency>
-
-<dependency>
+  </dependency>
+  <dependency>
+    <groupId>com.squareup.okhttp3</groupId>
+    <artifactId>okhttp</artifactId>
+    <version>3.7.0</version>
+  </dependency>
+  <dependency>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>exec-maven-plugin</artifactId>
     <version>1.6.0</version>
-</dependency>
+  </dependency>
+
+
+  <!-- OpenTracing Tracer Implementations -->
+  <dependency>
+    <groupId>com.lightstep.tracer</groupId>
+    <artifactId>lightstep-tracer-jre</artifactId>
+    <version>0.11.0</version>
+  </dependency>
+  <dependency>
+    <groupId>com.uber.jaeger</groupId>
+    <artifactId>jaeger-core</artifactId>
+    <version>0.18.0</version>
+  </dependency>
+  <dependency>
+    <groupId>io.opentracing.brave</groupId>
+    <artifactId>brave-opentracing</artifactId>
+    <version>0.20.0</version>
+  </dependency>
+  <dependency>
+    <groupId>io.zipkin.reporter</groupId>
+    <artifactId>zipkin-reporter</artifactId>
+    <version>0.7.1</version>
+  </dependency>
+  <dependency>
+    <groupId>io.zipkin.reporter</groupId>
+    <artifactId>zipkin-sender-okhttp3</artifactId>
+    <version>0.7.1</version>
+  </dependency>
 
 </dependencies>
 

@@ -42,17 +42,47 @@ Several OpenTracing-compatible Tracer implementations are supported
 out-of-the-box for convenience. Others can be added easily with a local change
 to `App.java`.
 
+#### Jaeger
+
+To run Jaeger locally (via Docker):
+
+```bash
+$ docker run -d -p 5775:5775/udp -p 16686:16686 jaegertracing/all-in-one:latest
+```
+
+```properties
+tracer=jaeger
+jaeger.reporter_host=localhost
+jaeger.reporter_port=5775
+```
+
+#### Zipkin
+
+To run Zipkin locally (via Docker):
+
+```bash
+$ docker run -d -p 9411:9411 openzipkin/zipkin
+```
+
+```properties
+tracer=zipkin
+zipkin.reporter_host=localhost
+zipkin.reporter_port=9411
+```
+
 #### LightStep
-If you're using LightStep, you will need your access token.
+
+If you have access to LightStep, you will need your access token.
 
 ```properties
 tracer=lightstep
 lightstep.collector_host=collector.lightstep.com
 lightstep.collector_port=443
-lightstep.access_token=1234567890abcdef  // TODO: replace with your token
+lightstep.access_token=XXXXXXXXXXXXXXX  // TODO: replace with your token
 ```
 
 ## Step 1: TurnKey Tracing
+
 When you go to add tracing to a system, the best place to start is installing
 OpenTracing plugins for the OSS components you are using. Instrumenting your
 networking libraries, web frameworks, and service clients quickly gives you a
