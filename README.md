@@ -90,7 +90,7 @@ lightstep.collector_port=443
 lightstep.access_token=XXXXXXXXXXXXXXX  // TODO: replace with your token
 ```
 
-## Step 0: Check out the `no-tracing` branch
+## Step 1: Check out the `no-tracing` branch
 
 The `master` branch in this repository has tracing instrumentation added as
 described below. To maximize your learnings, do a ...
@@ -103,7 +103,7 @@ git checkout no-tracing
 below will let you learn-by-doing as you re-introduce that tracing
 instrumentation.
 
-## Step 1: Turnkey Tracing
+## Step 2: Turnkey Tracing
 
 When you go to add tracing to a system, the best place to start is by
 installing OpenTracing plugins for the OSS components you are using.
@@ -167,7 +167,7 @@ should see the traces appear in your tracer.
 Search for traces starting belonging to the `MicroDonuts` component to see the
 patterns of requests that occur when you click the order button.
 
-## Step 2: Enhance
+## Step 3: Enhance
 
 Now that the components in our system are linked up at the networking level, we
 can start adding application level tracing by tying multiple network calls
@@ -220,13 +220,17 @@ And we're done! Buy some donuts, check out the spans under the `MicroDonuts`
 component and notice how the order and polling requests are now grouped under a
 single span, with timing information for the entire operation.
 
-### Step 3: Have fun
+### Step 4: Have fun
 
-If you still have time, try to trace other things! For example, maybe we would
-like to do have a main span when calling the `status` operation (the one
-polling the status of the order) at the `StatusServlet` and the
-`KitchenConsumer.getDonuts` call, like we did in the previous step with
-`OrderServlet` and `KitchenConsumer.addDonut`, respectively.
+If you still have time, try to trace other things and/or improve the instrumentation. For example:
+
+- Maybe we would like to have an overarching span when calling the `status`
+  operation (the one polling the status of the order) at the `StatusServlet`
+  and the `KitchenConsumer.getDonuts` call, like we did in the previous step
+  with `OrderServlet` and `KitchenConsumer.addDonut`
+- The automatic span names are sometimes overly general (e.g., "post"): try to
+  override them with something more revealing
+- Add span tags to make traces more self-descriptive and contextualized
 
 ## Thanks for playing, and welcome to OpenTracing!
 
