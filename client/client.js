@@ -89,7 +89,7 @@ function renderStatus(order){
 
   $("#order-loading").css("display","none");
   var status = order.status()
-  $("#wait-time").html("Wait time: "+status.estimated_delivery_time+" minutes");
+  $("#wait-time").html("Wait time: "+status.estimated_delivery_time+" seconds");
   $("#status-update").html("Status: "+status.state);
   $("#order-status").css("display","inline-block");
 }

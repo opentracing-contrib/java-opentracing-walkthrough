@@ -18,8 +18,8 @@ Clone this repository and build the jar file (for this, Maven must be
 installed):
 
 ```
-git clone github.com/carlosalberto/ot-walkthrough-java
-cd ot-walkthrough-java/microdonuts
+git clone git@github.com:opentracing-contrib/java-opentracing-walkthrough.git
+cd java-opentracing-walkthrough/microdonuts
 mvn package
 ```
 
