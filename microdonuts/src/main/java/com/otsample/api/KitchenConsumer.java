@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+import okhttp3.Connection;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -29,9 +30,24 @@ public class KitchenConsumer
 
     public KitchenConsumer()
     {
+        // A decorator that overrides the operation name with the URL path
+        SpanDecorator opNameDecorator = new SpanDecorator() {
+                @Override
+                public void onRequest(Request request, Span span) {
+                    // The important part:
+                    span.setOperationName(request.url().encodedPath());
+                }
+
+                @Override
+                public void onResponse(Response response, Span span) {}
+                @Override
+                public void onError(Throwable throwable, Span span) {}
+                @Override
+                public void onNetworkResponse(Connection connection, Response response, Span span) {}
+            };
         TracingInterceptor tracingInterceptor = new TracingInterceptor(
                 GlobalTracer.get(),
-                Arrays.asList(SpanDecorator.STANDARD_TAGS));
+                Arrays.asList(SpanDecorator.STANDARD_TAGS, opNameDecorator));
         client = new OkHttpClient.Builder()
                 .addInterceptor(tracingInterceptor)
                 .addNetworkInterceptor(tracingInterceptor)
