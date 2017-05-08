@@ -13,8 +13,11 @@ import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
+import io.opentracing.Span;
+import io.opentracing.tag.Tags;
 import io.opentracing.util.GlobalTracer;
 import io.opentracing.contrib.web.servlet.filter.TracingFilter;
+import io.opentracing.contrib.web.servlet.filter.ServletFilterSpanDecorator;
 
 import com.otsample.api.resources.*;
 
@@ -22,9 +25,35 @@ public class KitchenContextHandler extends ServletContextHandler
 {
     KitchenService service;
 
+    static class KitchenResponseSpanDecorator implements ServletFilterSpanDecorator
+    {
+        @Override
+        public void onRequest(HttpServletRequest httpServletRequest, Span span) {
+            span.setOperationName("Kitchen/" + httpServletRequest.getRequestURI());
+            Tags.COMPONENT.set(span, "Kitchen");
+        }
+
+        @Override
+        public void onResponse(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Span span) {
+        }
+
+        @Override
+        public void onError(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+                                 Throwable exception, Span span) {
+        }
+
+        @Override
+        public void onTimeout(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+                                 long timeout, Span span) {
+        }
+    }
+
     public KitchenContextHandler(Properties config)
     {
-        TracingFilter tracingFilter = new TracingFilter(GlobalTracer.get());
+        TracingFilter tracingFilter = new TracingFilter(
+                GlobalTracer.get(),
+                Arrays.asList(ServletFilterSpanDecorator.STANDARD_TAGS, new KitchenResponseSpanDecorator()),
+                null); // Skip pattern, not used.
         addFilter(new FilterHolder(tracingFilter), "/*", EnumSet.allOf(DispatcherType.class));
         setContextPath("/kitchen");
         registerServlets();

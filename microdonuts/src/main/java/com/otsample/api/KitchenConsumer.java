@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+import okhttp3.Connection;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -15,6 +16,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import io.opentracing.Span;
+import io.opentracing.tag.Tags;
 import io.opentracing.contrib.okhttp3.TagWrapper;
 import io.opentracing.contrib.okhttp3.TracingInterceptor;
 import io.opentracing.contrib.okhttp3.SpanDecorator;
@@ -27,11 +29,32 @@ public class KitchenConsumer
     OkHttpClient client;
     MediaType jsonType;
 
+    static class KitchenRequestSpanDecorator implements SpanDecorator
+    {
+        @Override
+        public void onRequest(Request request, Span span) {
+            span.setOperationName("Api/" + request.url().encodedPath());
+            Tags.COMPONENT.set(span, "Api");
+        }
+
+        @Override
+        public void onResponse(Response response, Span span) {
+        }
+
+        @Override
+        public void onError(Throwable throwable, Span span) {
+        }
+
+        @Override
+        public void onNetworkResponse(Connection connection, Response response, Span span) {
+        }
+    }
+
     public KitchenConsumer()
     {
         TracingInterceptor tracingInterceptor = new TracingInterceptor(
                 GlobalTracer.get(),
-                Arrays.asList(SpanDecorator.STANDARD_TAGS));
+                Arrays.asList(SpanDecorator.STANDARD_TAGS, new KitchenRequestSpanDecorator()));
         client = new OkHttpClient.Builder()
                 .addInterceptor(tracingInterceptor)
                 .addNetworkInterceptor(tracingInterceptor)
