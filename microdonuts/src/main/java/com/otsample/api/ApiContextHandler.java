@@ -1,26 +1,23 @@
 package com.otsample.api;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.otsample.api.resources.DonutRequest;
+import com.otsample.api.resources.StatusReq;
+import com.otsample.api.resources.StatusRes;
+import io.opentracing.ActiveSpan;
+import io.opentracing.util.GlobalTracer;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.*;
-
-import javax.servlet.Filter;
-import javax.servlet.DispatcherType;
+import java.util.Properties;
+import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-
-import io.opentracing.Span;
-import io.opentracing.util.GlobalTracer;
-
-import com.otsample.api.resources.*;
 
 public class ApiContextHandler extends ServletContextHandler
 {
@@ -54,7 +51,8 @@ public class ApiContextHandler extends ServletContextHandler
         public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
         {
-            try (Span orderSpan = GlobalTracer.get().buildSpan("order_span").start()) {
+            try (ActiveSpan orderSpan = GlobalTracer.get().buildSpan("order_span").startActive()) {
+                System.out.println("ORDERING POST");
                 request.setAttribute("span", orderSpan);
 
                 DonutRequest[] donutsInfo = parseDonutsInfo(request);

@@ -1,24 +1,21 @@
 package com.otsample.api;
 
-import io.opentracing.Span;
+import com.otsample.api.resources.DonutAddRequest;
 import io.opentracing.contrib.web.servlet.filter.ServletFilterSpanDecorator;
+import io.opentracing.contrib.web.servlet.filter.TracingFilter;
+import io.opentracing.util.GlobalTracer;
 import java.io.IOException;
-import java.util.*;
-
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.Properties;
 import javax.servlet.DispatcherType;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-
-import io.opentracing.util.GlobalTracer;
-import io.opentracing.contrib.web.servlet.filter.TracingFilter;
-
-import com.otsample.api.resources.*;
 
 public class KitchenContextHandler extends ServletContextHandler
 {
@@ -27,28 +24,8 @@ public class KitchenContextHandler extends ServletContextHandler
     public KitchenContextHandler(Properties config)
     {
         // The decorator here is boilerplate aside from the setOperationName() call.
-        ServletFilterSpanDecorator renameSpanDecorator =
-            new ServletFilterSpanDecorator() {
-                @Override
-                public void onRequest(HttpServletRequest httpServletRequest, Span span) {
-                    // The important part:
-                    span.setOperationName(httpServletRequest.getRequestURI());
-                }
-
-                @Override
-                public void onResponse(HttpServletRequest httpServletRequest,
-                    HttpServletResponse httpServletResponse, Span span) { }
-
-                @Override
-                public void onError(HttpServletRequest httpServletRequest,
-                    HttpServletResponse httpServletResponse, Throwable throwable, Span span) { }
-
-                @Override
-                public void onTimeout(HttpServletRequest httpServletRequest,
-                    HttpServletResponse httpServletResponse, long l, Span span) { }
-            };
         TracingFilter tracingFilter = new TracingFilter(
-            GlobalTracer.get(), Arrays.asList(renameSpanDecorator), null);
+            GlobalTracer.get(), Arrays.asList(ServletFilterSpanDecorator.STANDARD_TAGS), null);
         addFilter(new FilterHolder(tracingFilter), "/*", EnumSet.allOf(DispatcherType.class));
         setContextPath("/kitchen");
         registerServlets();
