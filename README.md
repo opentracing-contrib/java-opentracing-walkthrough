@@ -138,7 +138,7 @@ the `KitchenConsumer` constructor:
 ```java
     TracingInterceptor tracingInterceptor = new TracingInterceptor(
              GlobalTracer.get(),
-             Arrays.asList(SpanDecorator.STANDARD_TAGS));
+             Arrays.asList(OkHttpClientSpanDecorator.STANDARD_TAGS));
     client = new OkHttpClient.Builder()
             .addInterceptor(tracingInterceptor)
             .addNetworkInterceptor(tracingInterceptor)
@@ -184,7 +184,7 @@ one. In `microdonuts/src/main/java/com/otsample/api/ApiContextHandler.java` in
         public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
         {
-            Span orderSpan = GlobalTracer.get().buildSpan("order_span").start();
+            ActiveSpan orderSpan = GlobalTracer.get().buildSpan("order_span").startActive();
             request.setAttribute("span", orderSpan);
 ```
 
@@ -203,7 +203,7 @@ in our `HttpServletRequest` object, so we can retrive this information next. In
 `addDonut` add a `TagWrapper` instance with the parent span:
 
 ```java
-    Span parentSpan = (Span) request.getAttribute("span");
+    ActiveSpan parentSpan = (ActiveSpan) request.getAttribute("span");
     Request req = new Request.Builder()
         .url("http://127.0.0.1:10001/kitchen/add_donut")
         .post(body)

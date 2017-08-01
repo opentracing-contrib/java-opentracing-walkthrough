@@ -1,27 +1,29 @@
 package com.otsample.api;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.otsample.api.resources.Donut;
+import com.otsample.api.resources.DonutAddRequest;
+import com.otsample.api.resources.Status;
+import com.otsample.api.resources.StatusRes;
+import io.opentracing.ActiveSpan;
+import io.opentracing.BaseSpan;
+import io.opentracing.contrib.okhttp3.OkHttpClientSpanDecorator;
+import io.opentracing.contrib.okhttp3.TagWrapper;
+import io.opentracing.contrib.okhttp3.TracingInterceptor;
+import io.opentracing.util.GlobalTracer;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import javax.servlet.http.HttpServletRequest;
-
-import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
 import okhttp3.Connection;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-
-import io.opentracing.Span;
-import io.opentracing.contrib.okhttp3.TagWrapper;
-import io.opentracing.contrib.okhttp3.TracingInterceptor;
-import io.opentracing.contrib.okhttp3.SpanDecorator;
-import io.opentracing.util.GlobalTracer;
-
-import com.otsample.api.resources.*;
 
 public class KitchenConsumer
 {
@@ -30,24 +32,26 @@ public class KitchenConsumer
 
     public KitchenConsumer()
     {
-        // A decorator that overrides the operation name with the URL path
-        SpanDecorator opNameDecorator = new SpanDecorator() {
-                @Override
-                public void onRequest(Request request, Span span) {
-                    // The important part:
-                    span.setOperationName(request.url().encodedPath());
-                }
+        OkHttpClientSpanDecorator opNameDecorator = new OkHttpClientSpanDecorator() {
+            @Override
+            public void onRequest(Request request, BaseSpan<?> baseSpan) {
+                baseSpan.setOperationName(request.url().encodedPath());
+            }
 
-                @Override
-                public void onResponse(Response response, Span span) {}
-                @Override
-                public void onError(Throwable throwable, Span span) {}
-                @Override
-                public void onNetworkResponse(Connection connection, Response response, Span span) {}
-            };
+            @Override
+            public void onError(Throwable throwable, BaseSpan<?> baseSpan) {
+
+            }
+
+            @Override
+            public void onResponse(Connection connection, Response response, BaseSpan<?> baseSpan) {
+
+            }
+        };
+        // A decorator that overrides the operation name with the URL path
         TracingInterceptor tracingInterceptor = new TracingInterceptor(
                 GlobalTracer.get(),
-                Arrays.asList(SpanDecorator.STANDARD_TAGS, opNameDecorator));
+                Arrays.asList(OkHttpClientSpanDecorator.STANDARD_TAGS, opNameDecorator));
         client = new OkHttpClient.Builder()
                 .addInterceptor(tracingInterceptor)
                 .addNetworkInterceptor(tracingInterceptor)
@@ -61,7 +65,7 @@ public class KitchenConsumer
         DonutAddRequest donutReq = new DonutAddRequest(orderId);
         RequestBody body = RequestBody.create(jsonType, Utils.toJSON(donutReq));
 
-        Span parentSpan = (Span) request.getAttribute("span");
+        ActiveSpan parentSpan = (ActiveSpan) request.getAttribute("span");
         Request req = new Request.Builder()
             .url("http://127.0.0.1:10001/kitchen/add_donut")
             .post(body)
