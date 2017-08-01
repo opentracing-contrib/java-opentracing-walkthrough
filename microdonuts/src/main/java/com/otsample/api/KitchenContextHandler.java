@@ -1,6 +1,7 @@
 package com.otsample.api;
 
 import com.otsample.api.resources.DonutAddRequest;
+import io.opentracing.BaseSpan;
 import io.opentracing.contrib.web.servlet.filter.ServletFilterSpanDecorator;
 import io.opentracing.contrib.web.servlet.filter.TracingFilter;
 import io.opentracing.util.GlobalTracer;
@@ -24,8 +25,33 @@ public class KitchenContextHandler extends ServletContextHandler
     public KitchenContextHandler(Properties config)
     {
         // The decorator here is boilerplate aside from the setOperationName() call.
+        ServletFilterSpanDecorator renameSpanDecorator = new ServletFilterSpanDecorator() {
+          @Override
+          public void onRequest(HttpServletRequest httpServletRequest, BaseSpan<?> baseSpan) {
+            // The important part:
+            baseSpan.setOperationName(httpServletRequest.getRequestURI());
+          }
+
+          @Override
+          public void onResponse(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+              BaseSpan<?> baseSpan) {
+
+          }
+
+          @Override
+          public void onError(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+              Throwable throwable, BaseSpan<?> baseSpan) {
+
+          }
+
+          @Override
+          public void onTimeout(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, long l,
+              BaseSpan<?> baseSpan) {
+
+          }
+        };
         TracingFilter tracingFilter = new TracingFilter(
-            GlobalTracer.get(), Arrays.asList(ServletFilterSpanDecorator.STANDARD_TAGS), null);
+            GlobalTracer.get(), Arrays.asList(renameSpanDecorator), null);
         addFilter(new FilterHolder(tracingFilter), "/*", EnumSet.allOf(DispatcherType.class));
         setContextPath("/kitchen");
         registerServlets();

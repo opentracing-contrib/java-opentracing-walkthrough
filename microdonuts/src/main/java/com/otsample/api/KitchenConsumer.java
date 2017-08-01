@@ -7,6 +7,7 @@ import com.otsample.api.resources.DonutAddRequest;
 import com.otsample.api.resources.Status;
 import com.otsample.api.resources.StatusRes;
 import io.opentracing.ActiveSpan;
+import io.opentracing.BaseSpan;
 import io.opentracing.contrib.okhttp3.OkHttpClientSpanDecorator;
 import io.opentracing.contrib.okhttp3.TagWrapper;
 import io.opentracing.contrib.okhttp3.TracingInterceptor;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import javax.servlet.http.HttpServletRequest;
+import okhttp3.Connection;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -30,10 +32,26 @@ public class KitchenConsumer
 
     public KitchenConsumer()
     {
+        OkHttpClientSpanDecorator opNameDecorator = new OkHttpClientSpanDecorator() {
+            @Override
+            public void onRequest(Request request, BaseSpan<?> baseSpan) {
+                baseSpan.setOperationName(request.url().encodedPath());
+            }
+
+            @Override
+            public void onError(Throwable throwable, BaseSpan<?> baseSpan) {
+
+            }
+
+            @Override
+            public void onResponse(Connection connection, Response response, BaseSpan<?> baseSpan) {
+
+            }
+        };
         // A decorator that overrides the operation name with the URL path
         TracingInterceptor tracingInterceptor = new TracingInterceptor(
                 GlobalTracer.get(),
-                Arrays.asList(OkHttpClientSpanDecorator.STANDARD_TAGS));
+                Arrays.asList(OkHttpClientSpanDecorator.STANDARD_TAGS, opNameDecorator));
         client = new OkHttpClient.Builder()
                 .addInterceptor(tracingInterceptor)
                 .addNetworkInterceptor(tracingInterceptor)
