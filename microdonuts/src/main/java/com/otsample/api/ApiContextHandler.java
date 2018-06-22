@@ -2,25 +2,26 @@ package com.otsample.api;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.*;
+import java.util.Properties;
+import java.util.UUID;
 
-import javax.servlet.Filter;
-import javax.servlet.DispatcherType;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.otsample.api.resources.DonutRequest;
+import com.otsample.api.resources.StatusReq;
+import com.otsample.api.resources.StatusRes;
+
 import io.opentracing.Span;
 import io.opentracing.util.GlobalTracer;
-
-import com.otsample.api.resources.*;
 
 public class ApiContextHandler extends ServletContextHandler
 {
