@@ -31,7 +31,7 @@ the same process:
 
 ```
 cd java-opentracing-walkthrough/microdonuts
-mvn package exec:exec
+mvn package exec:exec@standard
 ```
 
 In your web broswer, navigate to http://127.0.0.1:10001 and order yourself some
