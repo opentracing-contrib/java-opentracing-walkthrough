@@ -19,7 +19,7 @@ public final class Utils
         return parser.parse(content).getAsJsonObject();
     }
 
-    public static Object readJSON(HttpServletRequest req, Class klass)
+    public static Object readJSON(HttpServletRequest req, Class<?> klass)
         throws IOException
     {
         String content = IOUtils.toString(req.getReader());
