@@ -16,13 +16,17 @@ import com.lightstep.tracer.shared.Options;
 
 import brave.Tracing;
 import brave.opentracing.BraveTracer;
+import io.jaegertracing.Configuration;
+import io.jaegertracing.Configuration.ReporterConfiguration;
+import io.jaegertracing.Configuration.SamplerConfiguration;
+import io.jaegertracing.Configuration.SenderConfiguration;
+import io.jaegertracing.samplers.ConstSampler;
 import io.opentracing.Tracer;
 import io.opentracing.util.GlobalTracer;
-import zipkin.Span;
-import zipkin.reporter.AsyncReporter;
-import zipkin.reporter.Reporter;
-import zipkin.reporter.Sender;
-import zipkin.reporter.okhttp3.OkHttpSender;
+import zipkin2.Span;
+import zipkin2.reporter.AsyncReporter;
+import zipkin2.reporter.Reporter;
+import zipkin2.reporter.okhttp3.OkHttpSender;
 
 public class App
 {
@@ -67,31 +71,33 @@ public class App
         return config;
     }
 
-    static boolean configureGlobalTracer(Properties config, String componentName)
+	static boolean configureGlobalTracer(Properties config, String componentName)
         throws MalformedURLException
     {
         String tracerName = config.getProperty("tracer");
         Tracer tracer = null;
         if ("jaeger".equals(tracerName)) {
-            tracer = new com.uber.jaeger.Configuration(
-                         componentName,
-                         new com.uber.jaeger.Configuration.SamplerConfiguration("const", 1),
-                         new com.uber.jaeger.Configuration.ReporterConfiguration(
-                             true,  // logSpans
-                             config.getProperty("jaeger.reporter_host"),
-                             Integer.decode(config.getProperty("jaeger.reporter_port")),
-                             1000,   // flush interval in milliseconds
-                             10000)  // max buffered Spans
-                     ).getTracer();
+            SamplerConfiguration samplerConfig = new SamplerConfiguration()
+                    .withType(ConstSampler.TYPE)
+                    .withParam(1);
+            SenderConfiguration senderConfig = new SenderConfiguration()
+                    .withAgentHost(config.getProperty("jaeger.reporter_host"))
+                    .withAgentPort(Integer.decode(config.getProperty("jaeger.reporter_port")));
+        	ReporterConfiguration reporterConfig = new ReporterConfiguration()
+        	        .withLogSpans(true)
+        	        .withFlushInterval(1000)
+        	        .withMaxQueueSize(10000)
+        	        .withSender(senderConfig);
+        	tracer = new Configuration(tracerName).withSampler(samplerConfig).withReporter(reporterConfig).getTracer();
         } else if ("zipkin".equals(tracerName)){
-            Sender sender = OkHttpSender.create(
+            OkHttpSender sender = OkHttpSender.create(
                 "http://" +
                     config.getProperty("zipkin.reporter_host") + ":" +
                     config.getProperty("zipkin.reporter_port") + "/api/v1/spans");
             Reporter<Span> reporter = AsyncReporter.builder(sender).build();
             tracer = BraveTracer.create(Tracing.newBuilder()
                 .localServiceName(componentName)
-                .reporter(reporter)
+                .spanReporter(reporter)
                 .build());
         } else if ("lightstep".equals(tracerName)) {
             Options opts = new Options.OptionsBuilder()
