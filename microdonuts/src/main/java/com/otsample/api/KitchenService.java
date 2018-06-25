@@ -84,6 +84,8 @@ public class KitchenService
                         Thread.sleep(1000);
                         donutReq.setStatus(Status.READY);
                         break;
+                    default:
+                    	continue;
                 }
             }
         }
