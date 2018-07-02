@@ -29,12 +29,12 @@
   <dependency>
     <groupId>io.opentracing.contrib</groupId>
     <artifactId>opentracing-web-servlet-filter</artifactId>
-    <version>0.0.6</version>
+    <version>0.1.1</version>
   </dependency>
   <dependency>
     <groupId>io.opentracing.contrib</groupId>
     <artifactId>opentracing-okhttp3</artifactId>
-    <version>0.0.4</version>
+    <version>0.1.0</version>
   </dependency>
   <dependency>
     <groupId>com.google.code.gson</groupId>
@@ -56,27 +56,27 @@
   <dependency>
     <groupId>com.lightstep.tracer</groupId>
     <artifactId>lightstep-tracer-jre</artifactId>
-    <version>0.11.0</version>
+    <version>0.14.2</version>
   </dependency>
   <dependency>
-    <groupId>com.uber.jaeger</groupId>
+    <groupId>io.jaegertracing</groupId>
     <artifactId>jaeger-core</artifactId>
-    <version>0.18.0</version>
+    <version>0.27.0</version>
   </dependency>
   <dependency>
     <groupId>io.opentracing.brave</groupId>
     <artifactId>brave-opentracing</artifactId>
-    <version>0.20.0</version>
+    <version>0.31.2</version>
   </dependency>
   <dependency>
-    <groupId>io.zipkin.reporter</groupId>
+    <groupId>io.zipkin.reporter2</groupId>
     <artifactId>zipkin-reporter</artifactId>
-    <version>0.7.1</version>
+    <version>2.7.6</version>
   </dependency>
   <dependency>
-    <groupId>io.zipkin.reporter</groupId>
+    <groupId>io.zipkin.reporter2</groupId>
     <artifactId>zipkin-sender-okhttp3</artifactId>
-    <version>0.7.1</version>
+    <version>2.7.6</version>
   </dependency>
 
 </dependencies>
@@ -108,28 +108,47 @@
         <version>1.6.0</version>
         <executions>
           <execution>
+            <id>standard</id>
             <goals>
               <goal>exec</goal>
             </goals>
+            <configuration>
+              <executable>java</executable>
+              <arguments>
+                <argument>-cp</argument>
+                <argument>target/api-1.0-SNAPSHOT.jar</argument>
+                <argument>-Dorg.eclipse.jetty.util.log.classrg.eclipse.jetty.util.log.StdErrLog</argument>
+                <argument>com.otsample.api.App</argument>
+                <argument>./tracer_config.properties</argument>
+              </arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>debug</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>java</executable>
+              <arguments>
+                <argument>-Xdebug</argument>
+          	    <argument>-Xrunjdwp:transport=dt_socket,address=8008,server=y,suspend=y</argument>
+                <argument>-cp</argument>
+                <argument>target/api-1.0-SNAPSHOT.jar</argument>
+                <argument>-Dorg.eclipse.jetty.util.log.classrg.eclipse.jetty.util.log.StdErrLog</argument>
+                <argument>com.otsample.api.App</argument>
+                <argument>./tracer_config.properties</argument>
+              </arguments>
+            </configuration>
           </execution>
         </executions>
-        <configuration>
-          <executable>java</executable>
-          <arguments>
-            <argument>-cp</argument>
-            <argument>target/api-1.0-SNAPSHOT.jar</argument>
-            <argument>-Dorg.eclipse.jetty.util.log.classrg.eclipse.jetty.util.log.StdErrLog</argument>
-            <argument>com.otsample.api.App</argument>
-            <argument>./tracer_config.properties</argument>
-          </arguments>
-        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>1.7</source>
-          <target>1.7</target>
+          <source>1.8</source>
+          <target>1.8</target>
         </configuration>
       </plugin>
     </plugins>
