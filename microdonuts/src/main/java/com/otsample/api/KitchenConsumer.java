@@ -18,7 +18,7 @@ import okhttp3.Response;
 import io.opentracing.Span;
 import io.opentracing.contrib.okhttp3.TagWrapper;
 import io.opentracing.contrib.okhttp3.TracingInterceptor;
-import io.opentracing.contrib.okhttp3.SpanDecorator;
+import io.opentracing.contrib.okhttp3.OkHttpClientSpanDecorator;
 import io.opentracing.util.GlobalTracer;
 
 import com.otsample.api.resources.*;
@@ -31,23 +31,20 @@ public class KitchenConsumer
     public KitchenConsumer()
     {
         // A decorator that overrides the operation name with the URL path
-        SpanDecorator opNameDecorator = new SpanDecorator() {
+        OkHttpClientSpanDecorator opNameDecorator = new OkHttpClientSpanDecorator() {
                 @Override
                 public void onRequest(Request request, Span span) {
                     // The important part:
                     span.setOperationName(request.url().encodedPath());
                 }
-
-                @Override
-                public void onResponse(Response response, Span span) {}
                 @Override
                 public void onError(Throwable throwable, Span span) {}
                 @Override
-                public void onNetworkResponse(Connection connection, Response response, Span span) {}
+                public void onResponse(Connection connection, Response response, Span span) {}
             };
         TracingInterceptor tracingInterceptor = new TracingInterceptor(
                 GlobalTracer.get(),
-                Arrays.asList(SpanDecorator.STANDARD_TAGS, opNameDecorator));
+                Arrays.asList(OkHttpClientSpanDecorator.STANDARD_TAGS, opNameDecorator));
         client = new OkHttpClient.Builder()
                 .addInterceptor(tracingInterceptor)
                 .addNetworkInterceptor(tracingInterceptor)
@@ -131,6 +128,8 @@ public class KitchenConsumer
                     estimatedTime += 1;
                     status = Status.COOKING;
                     break;
+                default:
+                    continue;
             }
         }
 
