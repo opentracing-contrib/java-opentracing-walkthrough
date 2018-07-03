@@ -8,6 +8,7 @@
 *.tar.gz
 *.rar
 *.iml
+*.bak
 
 target/
 .idea
@@ -19,3 +20,8 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
+
+# Eclipse related
+.project
+.classpath
+.settings/
