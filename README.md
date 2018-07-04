@@ -37,6 +37,16 @@ mvn package exec:exec
 In your web broswer, navigate to http://127.0.0.1:10001 and order yourself some
 µ-donuts.
 
+### Debugging
+If you wish to run MicroDonuts in debug mode, there is an execution with id `debug` available, which will start MicroDonuts in debug mode: 
+
+```
+cd java-opentracing-walkthrough/microdonuts
+mvn package exec:exec@debug
+```
+
+When starting in debug mode, MicroDonuts will wait for the connection of a remote Java debugger on port **8008** before starting, making it easy to set breakpoints and follow along with the API invocations.
+
 ### Pick a Tracer
 
 Several OpenTracing-compatible Tracer implementations are supported
