@@ -34,7 +34,7 @@ cd java-opentracing-walkthrough/microdonuts
 mvn package exec:exec
 ```
 
-In your web broswer, navigate to http://127.0.0.1:10001 and order yourself some
+In your web browser, navigate to http://127.0.0.1:10001 and order yourself some
 µ-donuts.
 
 ### Pick a Tracer
