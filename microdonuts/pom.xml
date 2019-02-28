@@ -8,6 +8,11 @@
   <name>api</name>
   <url>http://maven.apache.org</url>
 
+<properties>
+  <specialagent.jar>opentracing-specialagent-0.0.1-SNAPSHOT.jar</specialagent.jar>
+  <tracer.jar>jaeger.jar</tracer.jar>
+</properties>
+
 <dependencies>
 
   <dependency>
@@ -27,16 +32,6 @@
     <version>9.4.5.v20170502</version>
   </dependency>
   <dependency>
-    <groupId>io.opentracing.contrib</groupId>
-    <artifactId>opentracing-web-servlet-filter</artifactId>
-    <version>0.0.6</version>
-  </dependency>
-  <dependency>
-    <groupId>io.opentracing.contrib</groupId>
-    <artifactId>opentracing-okhttp3</artifactId>
-    <version>0.0.4</version>
-  </dependency>
-  <dependency>
     <groupId>com.google.code.gson</groupId>
     <artifactId>gson</artifactId>
     <version>2.8.0</version>
@@ -52,7 +47,21 @@
     <version>3.7.0</version>
   </dependency>
 
+  <!-- OpenTracing instrumentation libraries
+  <dependency>
+    <groupId>io.opentracing.contrib</groupId>
+    <artifactId>opentracing-web-servlet-filter</artifactId>
+    <version>0.0.6</version>
+  </dependency>
+  <dependency>
+    <groupId>io.opentracing.contrib</groupId>
+    <artifactId>opentracing-okhttp3</artifactId>
+    <version>0.0.4</version>
+  </dependency>
+  -->
+
   <!-- OpenTracing Tracer Implementations -->
+  <!--
   <dependency>
     <groupId>com.lightstep.tracer</groupId>
     <artifactId>lightstep-tracer-jre</artifactId>
@@ -78,6 +87,7 @@
     <artifactId>zipkin-sender-okhttp3</artifactId>
     <version>0.7.1</version>
   </dependency>
+  -->
 
 </dependencies>
 
@@ -117,8 +127,10 @@
           <executable>java</executable>
           <arguments>
             <argument>-cp</argument>
-            <argument>target/api-1.0-SNAPSHOT.jar</argument>
+            <argument>target/api-1.0-SNAPSHOT.jar:${tracer.jar}</argument>
             <argument>-Dorg.eclipse.jetty.util.log.classrg.eclipse.jetty.util.log.StdErrLog</argument>
+            <argument>-Dtracer.configurationFile=tracer_config.properties</argument>
+            <argument>-javaagent:${specialagent.jar}</argument>
             <argument>com.otsample.api.App</argument>
             <argument>./tracer_config.properties</argument>
           </arguments>
