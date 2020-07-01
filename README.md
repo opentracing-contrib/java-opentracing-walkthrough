@@ -23,7 +23,19 @@ cd java-opentracing-walkthrough/microdonuts
 mvn package
 ```
 
+#### Docker image
+From the main directory:
+
+```
+cd java-opentracing-walkthrough/microdonuts
+mvn package
+cd ..
+docker build . -t microdonuts
+```
+
 ### Running
+
+#### Locally
 
 MicroDonuts has two server components, `API` and `Kitchen`, which
 communicate each other over HTTP - they are, however, part of
@@ -34,8 +46,26 @@ cd java-opentracing-walkthrough/microdonuts
 mvn package exec:exec
 ```
 
+#### Docker
+
+```
+docker run -p 10001:10001 microdonuts
+```
+
+#### Accessing
+
 In your web browser, navigate to http://127.0.0.1:10001 and order yourself some
 µ-donuts.
+
+#### Kubernetes
+
+If you have a cluster running a tracing solution you can make use of the `microdonuts.yml` manifest.
+
+After uploading the docker image to a registry accessible by the cluster. You can edit the `tracer_config.properties` through the configMap in the manifest. And make sure to set the ingress url to one available from your cluster.
+
+```
+kubectl apply -f microdonuts.yml
+```  
 
 ### Pick a Tracer
 
