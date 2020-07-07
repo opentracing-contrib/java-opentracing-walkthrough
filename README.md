@@ -23,7 +23,19 @@ cd java-opentracing-walkthrough/microdonuts
 mvn package
 ```
 
+#### Docker image
+From the main directory:
+
+```
+cd java-opentracing-walkthrough/microdonuts
+mvn package
+cd ..
+docker build . -t microdonuts
+```
+
 ### Running
+
+#### Locally
 
 MicroDonuts has two server components, `API` and `Kitchen`, which
 communicate each other over HTTP - they are, however, part of
@@ -33,6 +45,14 @@ the same process:
 cd java-opentracing-walkthrough/microdonuts
 mvn package exec:exec
 ```
+
+#### Docker
+
+```
+docker run -p 10001:10001 microdonuts
+```
+
+#### Accessing
 
 In your web browser, navigate to http://127.0.0.1:10001 and order yourself some
 µ-donuts.
