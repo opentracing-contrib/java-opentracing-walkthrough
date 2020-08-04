@@ -99,12 +99,10 @@ public class App
                 .spanReporter(reporter)
                 .build());
         } else if ("lightstep".equals(tracerName)) {
-            OpenTelemetryConfiguration.newBuilder()
-                .setServiceName(componentName)
-                .setAccessToken(config.getProperty("lightstep.access_token"))
-                .setSpanEndpoint(config.getProperty("lightstep.collector_host"))
-                .install();
-
+            System.setProperty("ls.service.name", componentName);
+            System.setProperty("ls.access.token", config.getProperty("lightstep.access_token"));
+            System.setProperty("otel.exporter.otlp.span.endpoint", config.getProperty("lightstep.collector_host"));
+            OpenTelemetryConfiguration.newBuilder().install();
             tracer = TraceShim.createTracerShim();
         } else {
             return false;
