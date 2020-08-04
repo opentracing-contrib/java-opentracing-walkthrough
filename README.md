@@ -105,7 +105,7 @@ If you have access to [LightStep](https://app.lightstep.com]), you will need you
 
 ```properties
 tracer=lightstep
-lightstep.collector_host=collector.lightstep.com
+lightstep.collector_host=ingest.lightstep.com
 lightstep.access_token=XXXXXXXXXXXXXXX  // TODO: replace with your token
 ```
 
