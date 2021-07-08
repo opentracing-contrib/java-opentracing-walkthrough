@@ -101,7 +101,7 @@ Note that the all-in-one docker image presents the Zipkin UI at [localhost:9411]
 
 #### LightStep
 
-If you have access to [LightStep](https://app.lightstep.com]), you will need your access token. Add the following to `microdonuts/tracer_config.properties`:
+If you have access to [LightStep](https://app.lightstep.com), you will need your access token. Add the following to `microdonuts/tracer_config.properties`:
 
 ```properties
 tracer=lightstep
