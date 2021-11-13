@@ -1,5 +1,6 @@
 package com.otsample.api;
 
+import io.opentracing.Span;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Properties;
@@ -16,8 +17,6 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.otsample.api.KitchenConsumer;
-import com.otsample.api.Utils;
 import com.otsample.api.resources.DonutRequest;
 import com.otsample.api.resources.StatusReq;
 import com.otsample.api.resources.StatusRes;
@@ -57,8 +56,9 @@ public class ApiContextHandler extends ServletContextHandler
         public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
         {
-            try (Scope orderSpanScope = GlobalTracer.get().buildSpan("order_span").startActive(true)) {
-                request.setAttribute("span", orderSpanScope.span());
+            Span span = GlobalTracer.get().buildSpan("order_span").start();
+            try (Scope orderSpanScope = GlobalTracer.get().activateSpan(span)) {
+                request.setAttribute("span", span);
 
                 DonutRequest[] donutsInfo = parseDonutsInfo(request);
                 if (donutsInfo == null) {
@@ -84,6 +84,8 @@ public class ApiContextHandler extends ServletContextHandler
                 Utils.writeJSON(response, statusRes);
             } catch (Throwable t) {
                 t.printStackTrace();
+            } finally {
+                span.finish();
             }
         }
 

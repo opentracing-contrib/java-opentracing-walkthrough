@@ -1,5 +1,9 @@
 package com.otsample.api;
 
+import brave.opentracing.BraveTracer;
+import com.lightstep.opentelemetry.launcher.OpenTelemetryConfiguration;
+import io.jaegertracing.internal.samplers.ConstSampler;
+import io.opentelemetry.opentracingshim.TraceShim;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -11,16 +15,11 @@ import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 
-import com.lightstep.tracer.jre.JRETracer;
-import com.lightstep.tracer.shared.Options;
-
 import brave.Tracing;
-import brave.opentracing.BraveTracer;
 import io.jaegertracing.Configuration;
 import io.jaegertracing.Configuration.ReporterConfiguration;
 import io.jaegertracing.Configuration.SamplerConfiguration;
 import io.jaegertracing.Configuration.SenderConfiguration;
-import io.jaegertracing.samplers.ConstSampler;
 import io.opentracing.Tracer;
 import io.opentracing.util.GlobalTracer;
 import zipkin2.Span;
@@ -100,17 +99,15 @@ public class App
                 .spanReporter(reporter)
                 .build());
         } else if ("lightstep".equals(tracerName)) {
-            Options opts = new Options.OptionsBuilder()
-                .withAccessToken(config.getProperty("lightstep.access_token"))
-                .withCollectorHost(config.getProperty("lightstep.collector_host"))
-                .withCollectorPort(Integer.decode(config.getProperty("lightstep.collector_port")))
-                .withComponentName(componentName)
-                .build();
-            tracer = new JRETracer(opts);
+            System.setProperty("ls.service.name", componentName);
+            System.setProperty("ls.access.token", config.getProperty("lightstep.access_token"));
+            System.setProperty("otel.exporter.otlp.span.endpoint", config.getProperty("lightstep.collector_host"));
+            OpenTelemetryConfiguration.newBuilder().install();
+            tracer = TraceShim.createTracerShim();
         } else {
             return false;
         }
-        GlobalTracer.register(tracer);
+        GlobalTracer.registerIfAbsent(tracer);
         return true;
     }
 }
