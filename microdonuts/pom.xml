@@ -56,7 +56,12 @@
   <dependency>
     <groupId>com.lightstep.tracer</groupId>
     <artifactId>lightstep-tracer-jre</artifactId>
-    <version>0.14.2</version>
+    <version>0.15.0</version>
+  </dependency>
+  <dependency>
+    <groupId>com.lightstep.tracer</groupId>
+    <artifactId>tracer-okhttp</artifactId>
+    <version>0.16.1</version>
   </dependency>
   <dependency>
     <groupId>io.jaegertracing</groupId>
